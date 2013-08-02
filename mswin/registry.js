@@ -2,10 +2,11 @@
 var Registry = function(iTree, sComputerName) {
   this.iTree = (iTree || Registry.HKEY_LOCAL_MACHINE);
   this.sComputerName = (sComputerName || '.');
-  var locStr = 'winmgmts:{impersonationLevel=impersonate}//'
-             + this.sComputerName
-             + '/root/default:StdRegProv';
-  this.oRegistry = GetObject(locStr);
+
+  var loc = new ActiveXObject("WbemScripting.SWbemLocator")				  // SWbemLocator
+	, services = loc.ConnectServer(this.sComputerName, "/root/default");  // SWbemServices
+  this.oRegistry = services.Get('StdRegProv');							  // SWbemObject
+
 };
 
 // Add some useful constants to the Registry class.
